@@ -1,0 +1,16 @@
+<!-- create_book.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+</head>
+<body>
+<p>Add Book Below</p>
+<form method="post" action="{% url "relationship_app:create_book" %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"> Add </button>
+</form>
+</body>
+</html>
