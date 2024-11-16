@@ -81,7 +81,7 @@ def admin_check(user):
 
 
 @user_passes_test(admin_check)
-def Admin(request):
+def admin_view(request):
     return HttpResponse("<p>You are an Admin</p>")
 
 
@@ -90,7 +90,7 @@ def librarian_check(user):
 
 
 @user_passes_test(librarian_check)
-def Librarian(request):
+def librarian_view(request):
     return HttpResponse("<p>You are a Librarian</p>")
 
 
@@ -99,5 +99,5 @@ def member_check(user):
 
 
 @user_passes_test(member_check)
-def Member(request):
+def member_view(request):
     return HttpResponse("<p>You are a Member</p>")
