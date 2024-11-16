@@ -4,7 +4,8 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import DetailView, CreateView
 from .models import Book, Library
 from .forms import BookCreationForm
-from django.contrib.auth.decorators import permission_required
+from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required, user_passes_test
 
 
 # Create your views here.
@@ -65,3 +66,29 @@ def delete_book(request, pk):
     else:
         context = {"book":book}
         return render(request, "relationship_app/delete_book.html", context)
+
+
+#Admin, Librarian and Member Views
+
+def admin_check(user):
+    return user.profile.role == "ADM"
+
+@user_passes_test(admin_check)
+def Admin(request):
+    return HttpResponse("<p>You are an Admin</p>")
+
+
+def librarian_check(user):
+    return user.profile.role == "LIB"
+
+@user_passes_test(librarian_check)
+def Librarian(request):
+    return HttpResponse("<p>You are a Librarian</p>")
+
+
+def member_check(user):
+    return user.profile.role == "MEM"
+
+@user_passes_test(member_check)
+def Member(request):
+    return HttpResponse("<p>You are a Member</p>")
