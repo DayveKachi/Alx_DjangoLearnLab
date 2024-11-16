@@ -6,9 +6,9 @@ from .views import (
     create_book,
     update_book,
     delete_book,
-    Admin,
-    Librarian,
-    Member,
+    admin_view,
+    librarian_view,
+    member_view,
 )
 
 app_name = "relationship_app"
@@ -18,9 +18,9 @@ urlpatterns = [
     path("library/<int:pk>/books", LibraryDetailView.as_view(), name="library_detail"),
     path("accounts/register/", RegistrationView.as_view(), name="register"),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("role/admin/", Admin, name="admin_role"),
-    path("role/librarian/", Librarian, name="librarian_role"),
-    path("role/member/", Member, name="member_role"),
+    path("admin_view/", admin_view, name="admin_role"),
+    path("librarian_view/", librarian_view, name="librarian_role"),
+    path("member_view/", member_view, name="member_role"),
     path("add_book/", create_book, name="create_book"),
     path("edit_book/<int:pk>/", update_book, name="update_book"),
     path("delete_book/<int:pk>/", delete_book, name="delete_book"),
