@@ -14,7 +14,7 @@ urlpatterns = [
     path("role/admin/", Admin, name="admin_role"),
     path("role/librarian/", Librarian, name="librarian_role" ),
     path("role/member/", Member, name="member_role"),
-    path("book/add/", create_book, name="create_book"),
-    path("book/<int:pk>/update", update_book, name="update_book"),
-    path("book/<int:pk>/delete", delete_book, name="delete_book"),
+    path("add_book/", create_book, name="create_book"),
+    path("edit_book/<int:pk>/", update_book, name="update_book"),
+    path("delete_book/<int:pk>/", delete_book, name="delete_book"),
 ]
