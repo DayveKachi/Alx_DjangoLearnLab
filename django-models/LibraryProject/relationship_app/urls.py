@@ -1,8 +1,15 @@
 from django.urls import path, include
-from .views import book_list_view, LibraryDetailView, RegistrationView, create_book, update_book, delete_book
-from .admin_view import Admin
-from .librarian_view import Librarian
-from .member_view import Member
+from .views import (
+    book_list_view,
+    LibraryDetailView,
+    RegistrationView,
+    create_book,
+    update_book,
+    delete_book,
+    Admin,
+    Librarian,
+    Member,
+)
 
 app_name = "relationship_app"
 
