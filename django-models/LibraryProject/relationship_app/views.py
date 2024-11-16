@@ -29,7 +29,7 @@ class RegistrationView(CreateView):
     success_url = reverse_lazy("relationship_app:login")
 
 
-@permission_required("can_add_book")
+@permission_required("relationship_app.can_add_book")
 def create_book(request):
     if request.method == "POST":
         form = BookCreationForm(data=request.POST)
@@ -42,7 +42,7 @@ def create_book(request):
     context = {"form":form}
     return render(request, "relationship_app/create_book.html", context)
 
-@permission_required("can_change_book")
+@permission_required("relationship_app.can_change_book")
 def update_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == "POST":
@@ -56,7 +56,7 @@ def update_book(request, pk):
     context = { "form":form, "book":book}
     return render(request, "relationship_app/update_book.html", context)
 
-@permission_required("can_delete_book")
+@permission_required("relationship_app.can_delete_book")
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == "POST":
