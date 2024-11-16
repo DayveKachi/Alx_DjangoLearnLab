@@ -82,7 +82,7 @@ def admin_check(user):
 
 @user_passes_test(admin_check)
 def admin_view(request):
-    return HttpResponse("<p>You are an Admin</p>")
+    return render(request, "relationship_app/admin_view.html")
 
 
 def librarian_check(user):
@@ -91,7 +91,7 @@ def librarian_check(user):
 
 @user_passes_test(librarian_check)
 def librarian_view(request):
-    return HttpResponse("<p>You are a Librarian</p>")
+    return render(request, "relationship_app/librarian_view.html")
 
 
 def member_check(user):
@@ -100,4 +100,4 @@ def member_check(user):
 
 @user_passes_test(member_check)
 def member_view(request):
-    return HttpResponse("<p>You are a Member</p>")
+    return render(request, "relationship_app/member_view.html")
