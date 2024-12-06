@@ -5,7 +5,7 @@ from rest_framework.generics import (
     ListAPIView,
     DestroyAPIView,
 )
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .models import Book
 from .serializers import BookSerializer
 
