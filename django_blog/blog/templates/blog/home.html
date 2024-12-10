@@ -1,5 +1,9 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
-<p>Welcome to your homepage</p>
+    {% if user.is_authenticated %}
+        <p>Welcome {{ user.username }}</p>
+    {% else %}
+        <p>Welcome, please Login.</p>
+    {% endif %}
 {% endblock content %}
