@@ -32,26 +32,41 @@ urlpatterns = [
     path("post/new/", PostCreateView.as_view(), name="post_create"),
     path("post/<int:pk>/update/", PostUpdateView.as_view(), name="post_update"),
     path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post_delete"),
+    # Create Comment
     path(
-        "posts/<int:post_id>/comments/new",
+        "post/<int:pk>/comments/new/",
         CommentCreateView.as_view(),
         name="comment_create",
     ),
+    # Update Comment
+    path(
+        "comment/<int:pk>/update/", CommentUpdateView.as_view(), name="comment_update"
+    ),
+    # Delete Comment
+    path(
+        "comment/<int:pk>/delete/", CommentDeleteView.as_view(), name="comment_delete"
+    ),
+    # Read Comment
     path(
         "posts/<int:post_id>/comments/<int:comment_id>/",
         CommentDetailView.as_view(),
         name="comment_detail",
     ),
-    path(
-        "post/<int:post_id>/comments/<int:comment_id>/update/",
-        CommentUpdateView.as_view(),
-        name="comment_update",
-    ),
-    path(
-        "post/<int:post_id>/comments/<int:comment_id>/delete/",
-        CommentDeleteView.as_view(),
-        name="comment_delete",
-    ),
+    # path(
+    #     "posts/<int:post_id>/comments/new",
+    #     CommentCreateView.as_view(),
+    #     name="comment_create",
+    # ),
+    # path(
+    #     "post/<int:post_id>/comments/<int:comment_id>/update/",
+    #     CommentUpdateView.as_view(),
+    #     name="comment_update",
+    # ),
+    # path(
+    #     "post/<int:post_id>/comments/<int:comment_id>/delete/",
+    #     CommentDeleteView.as_view(),
+    #     name="comment_delete",
+    # ),
 ]
 
 if settings.DEBUG:

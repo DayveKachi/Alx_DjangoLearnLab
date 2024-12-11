@@ -6,7 +6,7 @@
                 <div> <h6> commented {{ comment.created_at }}</h6></div>
                 <div> <h6> updated {{ comment.updated_at }}</h6></div>
         {% if user == comment.author %}
-            <div><a href="{% url "comment_update" post_id=comment.post.id comment_id=comment.id %}" ><button>edit</button></a>
-            <a href="{% url "comment_delete" post_id=comment.post.id comment_id=comment.id %}" ><button>Delete</button></a></div>
+            <div><a href="{% url "comment_update" comment.pk %}" ><button>edit</button></a>
+            <a href="{% url "comment_delete" comment.pk %}" ><button>Delete</button></a></div>
         {% endif %}
 {% endblock content %}

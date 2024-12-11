@@ -112,13 +112,49 @@ class CommentCreateView(LoginRequiredMixin, generic.CreateView):
     def get_form_kwargs(self):
         """Pass the post and user to the form."""
         kwargs = super().get_form_kwargs()
-        kwargs["post"] = get_object_or_404(Post, id=self.kwargs["post_id"])
+        # Fetch the post object based on the 'pk' in the URL
+        kwargs["post"] = get_object_or_404(Post, id=self.kwargs["pk"])
         kwargs["user"] = self.request.user
         return kwargs
 
     def get_success_url(self):
         """Redirect to the post's detail view."""
-        return reverse_lazy("post_detail", kwargs={"pk": self.kwargs["post_id"]})
+        return reverse_lazy("post_detail", kwargs={"pk": self.kwargs["pk"]})
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comment_update.html"
+
+    def get_object(self):
+        """Retrieve the comment based on its primary key (pk)."""
+        return get_object_or_404(Comment, id=self.kwargs["pk"])
+
+    def get_success_url(self):
+        """Redirect to the related post's detail view."""
+        return reverse_lazy("post_detail", kwargs={"pk": self.object.post.id})
+
+    def test_func(self):
+        obj = self.get_object()
+        return self.request.user == obj.author
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Comment
+    template_name = "blog/comment_delete.html"
+
+    def get_object(self):
+        """Retrieve the comment based on its primary key (pk)."""
+        return get_object_or_404(Comment, id=self.kwargs["pk"])
+
+    def get_success_url(self):
+        """Redirect to the related post's detail view after deletion."""
+        return reverse_lazy("post_detail", kwargs={"pk": self.object.post.id})
+
+    def test_func(self):
+        obj = self.get_object()
+        return self.request.user == obj.author
 
 
 class CommentDetailView(generic.DetailView):
@@ -132,45 +168,62 @@ class CommentDetailView(generic.DetailView):
         return get_object_or_404(Comment, id=self.kwargs["comment_id"], post=post)
 
 
-class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
-    model = Comment
-    form_class = CommentForm
-    template_name = "blog/comment_update.html"
+# class CommentCreateView(LoginRequiredMixin, generic.CreateView):
+#     model = Comment
+#     form_class = CommentForm
+#     template_name = "blog/comment_create.html"
 
-    def get_object(self):
-        """Retrieve the comment for the given post and comment IDs."""
-        post = get_object_or_404(Post, id=self.kwargs["post_id"])
-        return get_object_or_404(Comment, id=self.kwargs["comment_id"], post=post)
+#     def get_form_kwargs(self):
+#         """Pass the post and user to the form."""
+#         kwargs = super().get_form_kwargs()
+#         kwargs["post"] = get_object_or_404(Post, id=self.kwargs["pk"])
+#         kwargs["user"] = self.request.user
+#         return kwargs
 
-    def get_form_kwargs(self):
-        """Pass the post and user to the form."""
-        kwargs = super().get_form_kwargs()
-        kwargs["post"] = get_object_or_404(Post, id=self.kwargs["post_id"])
-        kwargs["user"] = self.request.user
-        return kwargs
-
-    def get_success_url(self):
-        """Redirect to the post's detail view."""
-        return reverse_lazy("post_detail", kwargs={"pk": self.kwargs["post_id"]})
-
-    def test_func(self):
-        obj = self.get_object()
-        return self.request.user == obj.author
+#     def get_success_url(self):
+#         """Redirect to the post's detail view."""
+#         return reverse_lazy("post_detail", kwargs={"pk": self.kwargs["pk"]})
 
 
-class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
-    model = Comment
-    template_name = "blog/comment_delete.html"
+# class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+#     model = Comment
+#     form_class = CommentForm
+#     template_name = "blog/comment_update.html"
 
-    def get_object(self):
-        """Fetch the comment ensuring it belongs to the specified post."""
-        post = get_object_or_404(Post, id=self.kwargs["post_id"])
-        return get_object_or_404(Comment, id=self.kwargs["comment_id"], post=post)
+#     def get_object(self):
+#         """Retrieve the comment for the given post and comment IDs."""
+#         post = get_object_or_404(Post, id=self.kwargs["post_id"])
+#         return get_object_or_404(Comment, id=self.kwargs["comment_id"], post=post)
 
-    def get_success_url(self):
-        """Redirect to the post's detail view after deletion."""
-        return reverse_lazy("post_detail", kwargs={"pk": self.kwargs["post_id"]})
+#     def get_form_kwargs(self):
+#         """Pass the post and user to the form."""
+#         kwargs = super().get_form_kwargs()
+#         kwargs["post"] = get_object_or_404(Post, id=self.kwargs["post_id"])
+#         kwargs["user"] = self.request.user
+#         return kwargs
 
-    def test_func(self):
-        obj = self.get_object()
-        return self.request.user == obj.author
+#     def get_success_url(self):
+#         """Redirect to the post's detail view."""
+#         return reverse_lazy("post_detail", kwargs={"pk": self.kwargs["post_id"]})
+
+#     def test_func(self):
+#         obj = self.get_object()
+#         return self.request.user == obj.author
+
+
+# class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+#     model = Comment
+#     template_name = "blog/comment_delete.html"
+
+#     def get_object(self):
+#         """Fetch the comment ensuring it belongs to the specified post."""
+#         post = get_object_or_404(Post, id=self.kwargs["post_id"])
+#         return get_object_or_404(Comment, id=self.kwargs["comment_id"], post=post)
+
+#     def get_success_url(self):
+#         """Redirect to the post's detail view after deletion."""
+#         return reverse_lazy("post_detail", kwargs={"pk": self.kwargs["post_id"]})
+
+#     def test_func(self):
+#         obj = self.get_object()
+#         return self.request.user == obj.author

@@ -8,13 +8,14 @@
                 <div><a href="{% url "post_update" post.pk %}" ><button>edit</button></a>
                 <a href="{% url "post_delete" post.pk %}" ><button>Delete</button></a></div>
         {% endif %}
-               <a href="{% url "comment_create" post_id=post.pk %}"> <button>Comment</button><a/>
+               <a href="{% url "comment_create" post.pk %}"> <button>Comment</button><a/>
         {% if comments %}
             {% for comment in comments %}
                 <div><h6>{{ comment.author.username }} commented...</h6></div>
-                <a href="{% url "comment_detail" post_id=post.pk comment_id=comment.id %}" style="text-decorations:none"><div><h4>{{ comment.content }}</h4></div></a>
+                <a href="{% url "comment_detail" post_id=post.pk comment_id=comment.id %}" style="text-decorations:none;"><div><h4>{{ comment.content }}</h4></div></a>
                 <div> <h6> commented {{ comment.created_at }}</h6></div>
                 <div> <h6> updated {{ comment.updated_at }}</h6></div>
+                <hr>
             {% endfor %}
         {% endif %}
 {% endblock content %}
