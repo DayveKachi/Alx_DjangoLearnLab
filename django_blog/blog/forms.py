@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Post
+from .models import Profile, Post, Comment
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -68,3 +68,29 @@ class PostForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ("content",)  # Only 'content' is editable by the user
+
+    def __init__(self, *args, **kwargs):
+        # Extract 'post' and 'user' from kwargs
+        post = kwargs.pop(
+            "post", None
+        )  # Use pop to avoid passing them to the parent class
+        user = kwargs.pop("user", None)
+
+        # Initialize the form
+        super().__init__(*args, **kwargs)
+
+        # Set the initial values for 'post' and 'author' if provided
+        if post:
+            self.instance.post = (
+                post  # Set the post instance directly on the form's model instance
+            )
+        if user:
+            self.instance.author = (
+                user  # Set the author instance directly on the form's model instance
+            )
