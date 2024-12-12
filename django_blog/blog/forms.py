@@ -55,7 +55,7 @@ class ProfileForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        exclude = ("published_date", "author")
+        fields = ("title", "content", "tags")
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)  # Get the user from kwargs
@@ -67,6 +67,7 @@ class PostForm(forms.ModelForm):
             instance.author = self.user  # Automatically assign the logged-in user
         if commit:
             instance.save()
+            self.save_m2m()
         return instance
 
 
