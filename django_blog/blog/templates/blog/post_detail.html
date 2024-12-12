@@ -6,8 +6,8 @@
         <div> <span>published on {{ post.published_date }}</span> </div>
         <p>Tags:</p>
         <div>
-            {% for tag in post.related_tags.all %}
-                <a href="{% url "tag_posts" tag.name  %}" target="_blank">{{ tag.name }}</a>
+            {% for tag in post.tags.all %}
+                <a href="{% url "tag_posts" tag.slug  %}" target="_blank">{{ tag.name }}</a>
             {% endfor %}
         </div>
         <br>

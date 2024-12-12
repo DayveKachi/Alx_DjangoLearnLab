@@ -7,6 +7,7 @@ from .models import Post, Comment, Tag
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 
+
 # Homepage View
 
 
@@ -192,14 +193,33 @@ def search_posts(request):
     return render(request, "blog/search_results.html", {"posts": posts, "query": query})
 
 
-def tag_posts_view(request, tag_name):
-    tag = get_object_or_404(Tag, name=tag_name)
-    posts = tag.posts.all().order_by("-published_date")
-    context = {
-        "posts": posts,
-        "tag": tag,
-    }
-    return render(request, "blog/tag_posts.html", context)
+class PostByTagListView(generic.ListView):
+    model = Post
+    template_name = "blog/tag_posts.html"  # Customize the template if needed
+    context_object_name = "posts"
+
+    def get_queryset(self):
+        # Get the tag slug from the URL
+        tag_slug = self.kwargs.get("tag_slug")
+        tag = get_object_or_404(Tag, name=tag_slug)
+        # Filter posts associated with this tag
+        return tag.posts.all()
+
+    def get_context_data(self, **kwargs):
+        # Add extra context data if needed
+        context = super().get_context_data(**kwargs)
+        context["tag"] = get_object_or_404(Tag, name=self.kwargs.get("tag_slug"))
+        return context
+
+
+# def tag_posts_view(request, tag_name):
+#     tag = get_object_or_404(Tag, name=tag_name)
+#     posts = tag.posts.all().order_by("-published_date")
+#     context = {
+#         "posts": posts,
+#         "tag": tag,
+#     }
+#     return render(request, "blog/tag_posts.html", context)
 
 
 # class CommentCreateView(LoginRequiredMixin, generic.CreateView):

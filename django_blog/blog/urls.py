@@ -3,7 +3,7 @@ from .views import (
     search_posts,
     edit_profile,
     post_detail,
-    tag_posts_view,
+    # tag_posts_view,
     HomeView,
     UserCreateView,
     PostCreateView,
@@ -14,6 +14,7 @@ from .views import (
     CommentUpdateView,
     CommentDetailView,
     CommentDeleteView,
+    PostByTagListView,
 )
 from django.contrib.auth.views import LoginView, LogoutView
 from django.conf import settings
@@ -55,7 +56,7 @@ urlpatterns = [
         name="comment_detail",
     ),
     path("search/", search_posts, name="search_posts"),
-    path("tags/<str:tag_name>/", tag_posts_view, name="tag_posts"),
+    path("tags/<slug:tag_slug>/", PostByTagListView.as_view(), name="tag_posts"),
 ]
 
 if settings.DEBUG:
