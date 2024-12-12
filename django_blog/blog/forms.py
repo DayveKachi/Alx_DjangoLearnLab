@@ -100,3 +100,9 @@ class CommentForm(forms.ModelForm):
             self.instance.author = (
                 user  # Set the author instance directly on the form's model instance
             )
+
+
+class SearchForm(forms.Form):
+    """form for querying posts by filtering for specified words"""
+
+    q = forms.CharField(label="Search", max_length=100)

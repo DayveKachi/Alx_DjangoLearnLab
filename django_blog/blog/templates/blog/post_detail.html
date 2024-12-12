@@ -4,11 +4,19 @@
         <p> {{ post.title}} by {{ post.author}} </p>
         <div> {{ post.content}} </div>
         <div> <span>published on {{ post.published_date }}</span> </div>
+        <p>Tags:</p>
+        <div>
+            {% for tag in post.related_tags.all %}
+                <a href="{% url "tag_posts" tag.name  %}" target="_blank">{{ tag.name }}</a>
+            {% endfor %}
+        </div>
+        <br>
         {% if user == post.author %}
                 <div><a href="{% url "post_update" post.pk %}" ><button>edit</button></a>
                 <a href="{% url "post_delete" post.pk %}" ><button>Delete</button></a></div>
         {% endif %}
                <a href="{% url "comment_create" post.pk %}"> <button>Comment</button><a/>
+        <div><p>Comments</p></div>
         {% if comments %}
             {% for comment in comments %}
                 <div><h6>{{ comment.author.username }} commented...</h6></div>
@@ -17,5 +25,7 @@
                 <div> <h6> updated {{ comment.updated_at }}</h6></div>
                 <hr>
             {% endfor %}
+        {% else %}
+                <p>No comments...</p>
         {% endif %}
 {% endblock content %}

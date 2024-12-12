@@ -3,8 +3,9 @@ from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, ProfileForm, UserForm, PostForm, CommentForm
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 
 # Homepage View
 
@@ -52,6 +53,7 @@ class PostListView(generic.ListView):
     model = Post
     template_name = "blog/post_list.html"
     context_object_name = "posts"
+    ordering = ["-published_date"]
 
 
 def post_detail(request, pk):
@@ -166,6 +168,38 @@ class CommentDetailView(generic.DetailView):
         """Fetch the comment ensuring it belongs to the specified post."""
         post = get_object_or_404(Post, id=self.kwargs["post_id"])
         return get_object_or_404(Comment, id=self.kwargs["comment_id"], post=post)
+
+
+# Tagging and Searching related views
+
+
+def search_posts(request):
+    query = request.GET.get("q", "")  # Get the query parameter from the GET request
+    posts = Post.objects.none()  # Default to an empty queryset
+
+    if query:
+        # Build the query using Q objects
+        posts = (
+            Post.objects.filter(
+                Q(title__icontains=query)  # Search by title (case insensitive)
+                | Q(content__icontains=query)  # Search by content (case insensitive)
+                | Q(tags__name__icontains=query)  # Search by tags (case insensitive)
+            )
+            .distinct()
+            .order_by("-published_date")
+        )  # Ensure no duplicate posts if they match multiple conditions
+
+    return render(request, "blog/search_results.html", {"posts": posts, "query": query})
+
+
+def tag_posts_view(request, tag_name):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = tag.posts.all().order_by("-published_date")
+    context = {
+        "posts": posts,
+        "tag": tag,
+    }
+    return render(request, "blog/tag_posts.html", context)
 
 
 # class CommentCreateView(LoginRequiredMixin, generic.CreateView):
