@@ -59,12 +59,7 @@ class PostForm(forms.ModelForm):
         fields = ("title", "content", "tags")
 
     widgets = {
-        "tags": TagWidget(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Add tags seperated by commas",
-            }
-        ),
+        "tags": TagWidget(),
     }
 
     def __init__(self, *args, **kwargs):
