@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile, Post, Comment
+from taggit.forms import TagWidget
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -56,6 +57,15 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ("title", "content", "tags")
+
+    widgets = {
+        "tags": TagWidget(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Add tags seperated by commas",
+            }
+        ),
+    }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)  # Get the user from kwargs
