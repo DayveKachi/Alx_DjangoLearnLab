@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     # My Apps
     "accounts.apps.AccountsConfig",
+    "posts.apps.PostsConfig",
 ]
 
 MIDDLEWARE = [
