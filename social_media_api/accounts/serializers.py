@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, style={"input_type": "password"})
+    password = serializers.CharField()
     token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
