@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import path
 
 urlpatterns = [
-    # Your other URL patterns
+    path("register/"),
+    path("login/"),
+    path("profile/"),
 ]
 
 if settings.DEBUG:  # Serve media files only in development
