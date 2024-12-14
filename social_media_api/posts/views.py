@@ -1,8 +1,10 @@
-from rest_framework import viewsets, permissions, generics
+from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.exceptions import PermissionDenied
+from notifications.models import Notification
+from rest_framework.views import APIView
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -62,3 +64,39 @@ class FeedListView(generics.ListAPIView):
         following_users = user.following.all()
         posts = Post.objects.filter(author__in=following_users).order_by("-created_at")
         return posts
+
+
+class LikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+        if created:
+            # Create a notification for the post's author
+            Notification.objects.create(
+                recipient=post.author, actor=request.user, verb="liked", target=post
+            )
+            return Response({"message": "Post liked"}, status.HTTP_201_CREATED)
+        else:
+            return Response(
+                {"message": "You have already liked this post"},
+                status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class UnlikePostView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        like = Like.objects.filter(user=request.user, post=post).first()
+
+        if like:
+            like.delete()
+            return Response({"message": "Post unliked"}, status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"message": "You haven't liked this post yet"}, status.HTTP_400_BAD_REQUEST
+        )
