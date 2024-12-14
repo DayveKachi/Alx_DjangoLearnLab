@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from rest_framework.authtoken.models import Token
 from .serializers import UserRegistrationSerializer, UserProfileSerializer
 from rest_framework import generics
@@ -22,7 +22,7 @@ class UserRegistrationView(APIView):
 
 
 class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         serializer = UserProfileSerializer(request.user)
@@ -40,7 +40,7 @@ class UserProfileView(APIView):
 
 class FollowUserView(generics.GenericAPIView):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id, *args, **kwargs):
         # Get the target user
@@ -68,7 +68,7 @@ class FollowUserView(generics.GenericAPIView):
 
 class UnFollowUserView(generics.GenericAPIView):
     queryset = CustomUser.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id, *args, **kwargs):
         # Get the target user
