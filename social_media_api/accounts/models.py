@@ -28,7 +28,14 @@ class CustomUser(AbstractUser):
         upload_to="profile_pictures/", blank=True, null=True
     )
     followers = models.ManyToManyField(
-        "self", symmetrical=False, related_name="following"
+        "self",
+        symmetrical=False,
+        related_name="related_following",
+    )
+    following = models.ManyToManyField(
+        "self",
+        symmetrical=False,
+        related_name="related_followers",
     )
 
     USERNAME_FIELD = "email"
