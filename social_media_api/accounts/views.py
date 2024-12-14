@@ -44,7 +44,7 @@ class FollowUserView(generics.GenericAPIView):
 
     def post(self, request, user_id, *args, **kwargs):
         # Get the target user
-        user_to_be_followed = self.queryset.filter(id=user_id)
+        user_to_be_followed = self.queryset.filter(id=user_id).first()
         # Run some validations
         if not user_to_be_followed:
             return Response(
@@ -57,7 +57,7 @@ class FollowUserView(generics.GenericAPIView):
                     {"detail": "You cannot follow yourself."}, status.HTTP_403_FORBIDDEN
                 )
             # Add target to requesting user's following field
-            request.user.following.add(user_to_be_followed)
+            request.user.following.add(user_to_be_followed.id)
             return Response(
                 {
                     "detail": f"You have successfully followed {user_to_be_followed.username}"
@@ -72,7 +72,7 @@ class UnFollowUserView(generics.GenericAPIView):
 
     def post(self, request, user_id, *args, **kwargs):
         # Get the target user
-        user_to_be_unfollowed = self.queryset.filter(id=user_id)
+        user_to_be_unfollowed = self.queryset.filter(id=user_id).first()
         # Run some validations
         if not user_to_be_unfollowed:
             return Response(
@@ -86,7 +86,7 @@ class UnFollowUserView(generics.GenericAPIView):
                     status.HTTP_403_FORBIDDEN,
                 )
             # Add target to requesting user's following field
-            request.user.following.remove(user_to_be_unfollowed)
+            request.user.following.remove(user_to_be_unfollowed.id)
             return Response(
                 {
                     "detail": f"You have successfully unfollowed {user_to_be_unfollowed.username}"

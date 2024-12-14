@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
@@ -51,3 +51,14 @@ class CommentViewSet(viewsets.ModelViewSet):
         if not post:
             raise PermissionDenied("You must specify a post.")
         serializer.save(author=self.request.user, post=post)
+
+
+class FeedListView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        user = self.request.user
+        following_users = user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by("-created_at")
+        return posts
