@@ -16,6 +16,3 @@ urlpatterns = [
     path("follow/<int:user_id>/", FollowUserView.as_view(), name="follow_user"),
     path("unfollow/<int:user_id>/", UnFollowUserView.as_view(), name="unfollow_user"),
 ]
-
-if settings.DEBUG:  # Serve media files only in development
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

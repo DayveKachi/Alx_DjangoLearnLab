@@ -24,3 +24,6 @@ urlpatterns = [
     path("api/", include("posts.urls")),
     path("notifications/", include("notifications.urls")),
 ]
+
+if settings.DEBUG:  # Serve media files only in development
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
