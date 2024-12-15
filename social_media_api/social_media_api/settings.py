@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-1-z^ium@r^j%ly8uqt*z+zvm((&*h)78s0-71udd)fhn*5f_gw"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -84,8 +85,12 @@ WSGI_APPLICATION = "social_media_api.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),  # Name of database
+        "USER": config("DB_USER"),  # Database username
+        "PASSWORD": config("DB_PASSWORD"),  # Database password
+        "HOST": config("DB_HOST", default="localhost"),
+        "PORT": config("DB_PORT", default="5432"),
     }
 }
 
@@ -142,3 +147,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
 }
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
+X_FRAME_OPTIONS = "DENY"
